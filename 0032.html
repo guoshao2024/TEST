@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旅游资讯卡片展示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #e6f7ff;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .card-content {
+            padding: 20px;
+        }
+        
+        .card-category {
+            display: inline-block;
+            background-color: #e74c3c;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .card-description {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .card-price {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        
+        .card-btn {
+            padding: 8px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .card-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .favorite-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+        
+        .favorite-btn:hover {
+            background-color: rgba(231, 76, 60, 0.2);
+        }
+        
+        .favorite-btn.active {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        @media (max-width: 768px) {
+            .cards-container {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>探索世界之美</h1>
+        <p>发现最适合您的旅行目的地</p>
+    </div>
+    
+    <div class="filter-container">
+        <button class="filter-btn active" data-category="all">全部</button>
+        <button class="filter-btn" data-category="domestic">国内游</button>
+        <button class="filter-btn" data-category="international">国际游</button>
+        <button class="filter-btn" data-category="adventure">探险游</button>
+        <button class="filter-btn" data-category="relax">休闲游</button>
+    </div>
+    
+    <div class="cards-container" id="cardsContainer">
+        <!-- 卡片将通过JavaScript动态生成 -->
+    </div>
+    
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModal">&times;</button>
+            <h2 id="modalTitle"></h2>
+            <img id="modalImage" src="" alt="" style="width: 100%; height: 250px; object-fit: cover; border-radius: 8px; margin: 15px 0;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                <span id="modalCategory" class="card-category"></span>
+                <span id="modalPrice" class="card-price"></span>
+            </div>
+            <p id="modalDescription"></p>
+            <div style="margin-top: 20px;">
+                <h3>行程亮点</h3>
+                <ul id="modalHighlights" style="margin-top: 10px; padding-left: 20px;"></ul>
+            </div>
+            <button class="card-btn" style="margin-top: 20px; width: 100%;">立即预订</button>
+        </div>
+    </div>
+    
+    <script>
+        // 旅游数据
+        const travelData = [
+            {
+                id: 1,
+                title: "丽江古城文化之旅",
+                category: "domestic",
+                price: "¥2,499起",
+                description: "探索世界文化遗产丽江古城，感受纳西族传统文化，漫步四方街，体验悠闲的古城生活。",
+                image: "https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                highlights: [
+                    "参观丽江古城世界文化遗产",
+                    "体验纳西族传统文化",
+                    "玉龙雪山一日游",
+                    "品尝当地特色美食"
+                ]
+            },
+            {
+                id: 2,
+                title: "巴黎浪漫之旅",
+                category: "international",
+                price: "¥12,999起",
+                description: "浪漫之都巴黎，埃菲尔铁塔、卢浮宫、塞纳河游船，体验最纯正的法式风情。",
+                image: "https://images.unsplash.com/photo-1431274172761-fca41d930114?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                highlights: [
+                    "埃菲尔铁塔登顶",
+                    "卢浮宫艺术之旅",
+                    "塞纳河游船晚餐",
+                    "蒙马特高地艺术区"
+                ]
+            },
+            {
+                id: 3,
+                title: "西藏高原探险",
+                category: "adventure",
+                price: "¥5,999起",
+                description: "挑战高原极限，探访布达拉宫，感受藏传佛教文化，欣赏绝美的高原风光。",
+                image: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                highlights: [
+                    "布达拉宫参观",
+                    "纳木错圣湖之旅",
+                    "藏式文化体验",
+                    "高原适应训练"
+                ]
+            },
+            {
+                id: 4,
+                title: "三亚海滨度假",
+                category: "relax",
+                price: "¥3,599起",
+                description: "阳光、沙滩、海浪，三亚是中国最著名的海滨度假胜地，享受悠闲的假期时光。",
+                image: "https://images.unsplash.com/photo-1531214159280-079b95d26139?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                highlights: [
+                    "亚龙湾海滩休闲",
+                    "蜈支洲岛一日游",
+                    "海鲜美食体验",
+                    "五星级度假酒店"
+                ]
+            },
+            {
+                id: 5,
+                title: "东京都市探索",
+                category: "international",
+                price: "¥8,999起",
+                description: "现代与传统交融的东京，从浅草寺到银座，从秋叶原到新宿，体验多元化的日本文化。",
+                image: "https://images.unsplash.com/photo-1492571350019-22de08371fd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                highlights: [
+                    "浅草寺文化体验",
+                    "银座购物之旅",
+                    "秋叶原动漫文化",
+                    "东京塔夜景"
+                ]
+            },
+            {
+                id: 6,
+                title: "张家界自然奇观",
+                category: "adventure",
+                price: "¥2,899起",
+                description: "探索张家界国家森林公园的奇峰异石，体验玻璃栈道的惊险刺激，感受大自然的鬼斧神工。",
+                image: "https://images.unsplash.com/photo-1566438480900-0609be27a4be?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                highlights: [
+                    "张家界国家森林公园",
+                    "天门山玻璃栈道",
+                    "袁家界景区",
+                    "土家族文化体验"
+                ]
+            }
+        ];
+        
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCards(travelData);
+            setupFilterButtons();
+            setupModal();
+        });
+        
+        // 渲染卡片
+        function renderCards(data) {
+            const container = document.getElementById('cardsContainer');
+            container.innerHTML = '';
+            
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.dataset.category = item.category;
+                
+                card.innerHTML = `
+                    <img src="${item.image}" alt="${item.title}" class="card-image">
+                    <button class="favorite-btn">♥</button>
+                    <div class="card-content">
+                        <span class="card-category">${getCategoryName(item.category)}</span>
+                        <h3 class="card-title">${item.title}</h3>
+                        <p class="card-description">${item.description}</p>
+                        <div class="card-footer">
+                            <span class="card-price">${item.price}</span>
+                            <button class="card-btn view-detail" data-id="${item.id}">查看详情</button>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+            
+            // 添加收藏按钮事件
+            document.querySelectorAll('.favorite-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    this.classList.toggle('active');
+                });
+            });
+            
+            // 添加查看详情事件
+            document.querySelectorAll('.view-detail').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.dataset.id);
+                    showDetailModal(id);
+                });
+            });
+        }
+        
+        // 设置筛选按钮
+        function setupFilterButtons() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 更新活动按钮样式
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 筛选卡片
+                    const category = this.dataset.category;
+                    filterCards(category);
+                });
+            });
+        }
+        
+        // 筛选卡片
+        function filterCards(category) {
+            const cards = document.querySelectorAll('.card');
+            
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        // 设置模态框
+        function setupModal() {
+            const modal = document.getElementById('detailModal');
+            const closeBtn = document.getElementById('closeModal');
+            
+            closeBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+        
+        // 显示详情模态框
+        function showDetailModal(id) {
+            const item = travelData.find(item => item.id === id);
+            if (!item) return;
+            
+            const modal = document.getElementById('detailModal');
+            document.getElementById('modalTitle').textContent = item.title;
+            document.getElementById('modalImage').src = item.image;
+            document.getElementById('modalImage').alt = item.title;
+            document.getElementById('modalCategory').textContent = getCategoryName(item.category);
+            document.getElementById('modalPrice').textContent = item.price;
+            document.getElementById('modalDescription').textContent = item.description;
+            
+            const highlightsList = document.getElementById('modalHighlights');
+            highlightsList.innerHTML = '';
+            item.highlights.forEach(highlight => {
+                const li = document.createElement('li');
+                li.textContent = highlight;
+                highlightsList.appendChild(li);
+            });
+            
+            modal.style.display = 'flex';
+        }
+        
+        // 获取分类名称
+        function getCategoryName(category) {
+            const names = {
+                'domestic': '国内游',
+                'international': '国际游',
+                'adventure': '探险游',
+                'relax': '休闲游'
+            };
+            return names[category] || category;
+        }
+    </script>
+</body>
+</html>
