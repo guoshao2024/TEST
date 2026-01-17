@@ -3,163 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>旅游资讯卡片展示</title>
+    <title>GitHub图片自动相册</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
         }
         
         body {
-            background-color: #e6f7ff;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
             padding: 20px;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .header h1 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-        
-        .filter-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .filter-btn {
-            padding: 8px 16px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .filter-btn:hover, .filter-btn.active {
-            background-color: #3498db;
-            color: white;
-            border-color: #3498db;
-        }
-        
-        .cards-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
         
-        .card {
-            background-color: white;
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(106, 17, 203, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto 20px;
+        }
+        
+        .config-panel {
+            background-color: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .config-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .config-label {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .config-input {
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            min-width: 300px;
+        }
+        
+        .config-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .config-input:focus {
+            outline: none;
+            border-color: white;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border-radius: 6px;
+            border: none;
+            background-color: white;
+            color: #6a11cb;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background-color: #ff6b6b;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #ff5252;
+        }
+        
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .gallery-item {
+            background-color: white;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
             position: relative;
         }
         
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        .gallery-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
         }
         
-        .card-image {
+        .thumbnail {
             width: 100%;
-            height: 200px;
+            height: 220px;
             object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
         }
         
-        .card-content {
-            padding: 20px;
+        .gallery-item:hover .thumbnail {
+            transform: scale(1.05);
         }
         
-        .card-category {
-            display: inline-block;
-            background-color: #e74c3c;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            margin-bottom: 10px;
+        .image-info {
+            padding: 18px;
         }
         
-        .card-title {
-            font-size: 18px;
-            margin-bottom: 10px;
+        .image-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
             color: #2c3e50;
+            word-break: break-word;
         }
         
-        .card-description {
+        .image-size {
+            font-size: 0.9rem;
             color: #7f8c8d;
-            font-size: 14px;
-            margin-bottom: 15px;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
         }
         
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
-        }
-        
-        .card-price {
-            font-weight: bold;
-            color: #e74c3c;
-        }
-        
-        .card-btn {
-            padding: 8px 15px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .card-btn:hover {
-            background-color: #2980b9;
-        }
-        
-        .favorite-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 30px;
-            height: 30px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            border: none;
-            transition: all 0.3s;
-        }
-        
-        .favorite-btn:hover {
-            background-color: rgba(231, 76, 60, 0.2);
-        }
-        
-        .favorite-btn.active {
-            background-color: #e74c3c;
-            color: white;
-        }
-        
+        /* 模态框样式 */
         .modal {
             display: none;
             position: fixed;
@@ -167,296 +174,614 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 100;
+            background-color: rgba(0, 0, 0, 0.92);
+            z-index: 1000;
             justify-content: center;
             align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.active {
+            display: flex;
+            opacity: 1;
         }
         
         .modal-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
+            max-width: 90%;
+            max-height: 90%;
             position: relative;
+            background-color: #111;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
         }
         
-        .close-btn {
+        .modal-image {
+            max-width: 100%;
+            max-height: 80vh;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .modal-close {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 20px;
-            cursor: pointer;
+            top: 20px;
+            right: 25px;
+            font-size: 36px;
+            color: white;
             background: none;
             border: none;
+            cursor: pointer;
+            z-index: 1001;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.2s;
         }
         
+        .modal-close:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            font-size: 30px;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+        
+        .modal-nav:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .modal-prev {
+            left: 25px;
+        }
+        
+        .modal-next {
+            right: 25px;
+        }
+        
+        .image-counter {
+            position: absolute;
+            bottom: 25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+        
+        .image-description {
+            padding: 15px 25px;
+            color: white;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            word-break: break-all;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            margin-top: 30px;
+            color: #7f8c8d;
+            border-top: 1px solid #eaeaea;
+            font-size: 0.95rem;
+        }
+        
+        /* 响应式设计 */
         @media (max-width: 768px) {
-            .cards-container {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            .gallery-container {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 20px;
             }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .modal-nav {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+            
+            .modal-close {
+                top: 15px;
+                right: 15px;
+                font-size: 30px;
+            }
+            
+            .config-input {
+                min-width: 250px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .gallery-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            body {
+                padding: 15px;
+            }
+            
+            .config-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .config-input {
+                min-width: auto;
+                width: 100%;
+            }
+        }
+        
+        /* 图片加载动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .thumbnail {
+            animation: fadeIn 0.5s ease;
+        }
+        
+        /* 加载指示器 */
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            font-size: 1.2rem;
+            color: #6a11cb;
+        }
+        
+        .loader.active {
+            display: block;
+        }
+        
+        .loader-spinner {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(106, 17, 203, 0.2);
+            border-radius: 50%;
+            border-top-color: #6a11cb;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 15px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .status-message {
+            text-align: center;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        .status-success {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .status-error {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        
+        .status-info {
+            background-color: rgba(52, 152, 219, 0.2);
+            color: #2980b9;
+        }
+        
+        .github-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+            transition: border-color 0.3s;
+        }
+        
+        .github-link:hover {
+            border-color: white;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 25px 0;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>探索世界之美</h1>
-        <p>发现最适合您的旅行目的地</p>
-    </div>
+    <header>
+        <h1>GitHub图片自动相册</h1>
+        <p class="subtitle">自动扫描并显示GitHub仓库中的图片文件，无需手动配置每张图片</p>
+        
+        <div class="config-panel">
+            <div class="config-row">
+                <label class="config-label">GitHub用户名:</label>
+                <input type="text" class="config-input" id="username" placeholder="例如: guoshao2024" value="guoshao2024">
+            </div>
+            <div class="config-row">
+                <label class="config-label">仓库名称:</label>
+                <input type="text" class="config-input" id="repo" placeholder="例如: game" value="game">
+            </div>
+            <div class="config-row">
+                <label class="config-label">分支/路径:</label>
+                <input type="text" class="config-input" id="path" placeholder="例如: main 或 main/images" value="main">
+            </div>
+            <div class="config-row">
+                <button class="btn btn-primary" id="loadImages">加载图片</button>
+                <button class="btn" id="clearGallery">清空相册</button>
+            </div>
+        </div>
+    </header>
     
-    <div class="filter-container">
-        <button class="filter-btn active" data-category="all">全部</button>
-        <button class="filter-btn" data-category="domestic">国内游</button>
-        <button class="filter-btn" data-category="international">国际游</button>
-        <button class="filter-btn" data-category="adventure">探险游</button>
-        <button class="filter-btn" data-category="relax">休闲游</button>
-    </div>
+    <main>
+        <div class="controls">
+            <button class="btn" id="refreshImages">重新加载</button>
+            <button class="btn" id="loadSample">加载示例图片</button>
+        </div>
+        
+        <div class="status-message status-info" id="statusMessage">
+            请配置您的GitHub仓库信息，然后点击"加载图片"按钮。
+        </div>
+        
+        <div class="gallery-container" id="galleryContainer">
+            <!-- 图片将通过JavaScript动态加载 -->
+        </div>
+        
+        <div class="loader" id="loader">
+            <div class="loader-spinner"></div>
+            <div>正在从GitHub加载图片列表...</div>
+        </div>
+    </main>
     
-    <div class="cards-container" id="cardsContainer">
-        <!-- 卡片将通过JavaScript动态生成 -->
-    </div>
-    
-    <div class="modal" id="detailModal">
+    <!-- 图片放大查看模态框 -->
+    <div class="modal" id="imageModal">
+        <button class="modal-close" id="modalClose">&times;</button>
+        <button class="modal-nav modal-prev" id="modalPrev">&#10094;</button>
+        <button class="modal-nav modal-next" id="modalNext">&#10095;</button>
+        
         <div class="modal-content">
-            <button class="close-btn" id="closeModal">&times;</button>
-            <h2 id="modalTitle"></h2>
-            <img id="modalImage" src="" alt="" style="width: 100%; height: 250px; object-fit: cover; border-radius: 8px; margin: 15px 0;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                <span id="modalCategory" class="card-category"></span>
-                <span id="modalPrice" class="card-price"></span>
-            </div>
-            <p id="modalDescription"></p>
-            <div style="margin-top: 20px;">
-                <h3>行程亮点</h3>
-                <ul id="modalHighlights" style="margin-top: 10px; padding-left: 20px;"></ul>
-            </div>
-            <button class="card-btn" style="margin-top: 20px; width: 100%;">立即预订</button>
+            <img class="modal-image" id="modalImage" src="" alt="放大图片">
+            <div class="image-description" id="imageDescription"></div>
+            <div class="image-counter" id="imageCounter"></div>
         </div>
     </div>
     
+    <footer>
+        <p>GitHub图片自动相册 &copy; <span id="currentYear"></span> | 自动扫描GitHub仓库中的图片文件</p>
+    </footer>
+
     <script>
-        // 旅游数据
-        const travelData = [
-            {
-                id: 1,
-                title: "丽江古城文化之旅",
-                category: "domestic",
-                price: "¥2,499起",
-                description: "探索世界文化遗产丽江古城，感受纳西族传统文化，漫步四方街，体验悠闲的古城生活。",
-                image: "https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-                highlights: [
-                    "参观丽江古城世界文化遗产",
-                    "体验纳西族传统文化",
-                    "玉龙雪山一日游",
-                    "品尝当地特色美食"
-                ]
-            },
-            {
-                id: 2,
-                title: "巴黎浪漫之旅",
-                category: "international",
-                price: "¥12,999起",
-                description: "浪漫之都巴黎，埃菲尔铁塔、卢浮宫、塞纳河游船，体验最纯正的法式风情。",
-                image: "https://images.unsplash.com/photo-1431274172761-fca41d930114?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-                highlights: [
-                    "埃菲尔铁塔登顶",
-                    "卢浮宫艺术之旅",
-                    "塞纳河游船晚餐",
-                    "蒙马特高地艺术区"
-                ]
-            },
-            {
-                id: 3,
-                title: "西藏高原探险",
-                category: "adventure",
-                price: "¥5,999起",
-                description: "挑战高原极限，探访布达拉宫，感受藏传佛教文化，欣赏绝美的高原风光。",
-                image: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-                highlights: [
-                    "布达拉宫参观",
-                    "纳木错圣湖之旅",
-                    "藏式文化体验",
-                    "高原适应训练"
-                ]
-            },
-            {
-                id: 4,
-                title: "三亚海滨度假",
-                category: "relax",
-                price: "¥3,599起",
-                description: "阳光、沙滩、海浪，三亚是中国最著名的海滨度假胜地，享受悠闲的假期时光。",
-                image: "https://images.unsplash.com/photo-1531214159280-079b95d26139?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-                highlights: [
-                    "亚龙湾海滩休闲",
-                    "蜈支洲岛一日游",
-                    "海鲜美食体验",
-                    "五星级度假酒店"
-                ]
-            },
-            {
-                id: 5,
-                title: "东京都市探索",
-                category: "international",
-                price: "¥8,999起",
-                description: "现代与传统交融的东京，从浅草寺到银座，从秋叶原到新宿，体验多元化的日本文化。",
-                image: "https://images.unsplash.com/photo-1492571350019-22de08371fd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-                highlights: [
-                    "浅草寺文化体验",
-                    "银座购物之旅",
-                    "秋叶原动漫文化",
-                    "东京塔夜景"
-                ]
-            },
-            {
-                id: 6,
-                title: "张家界自然奇观",
-                category: "adventure",
-                price: "¥2,899起",
-                description: "探索张家界国家森林公园的奇峰异石，体验玻璃栈道的惊险刺激，感受大自然的鬼斧神工。",
-                image: "https://images.unsplash.com/photo-1566438480900-0609be27a4be?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-                highlights: [
-                    "张家界国家森林公园",
-                    "天门山玻璃栈道",
-                    "袁家界景区",
-                    "土家族文化体验"
-                ]
-            }
-        ];
+        // DOM元素
+        const galleryContainer = document.getElementById('galleryContainer');
+        const imageModal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalClose = document.getElementById('modalClose');
+        const modalPrev = document.getElementById('modalPrev');
+        const modalNext = document.getElementById('modalNext');
+        const imageDescription = document.getElementById('imageDescription');
+        const imageCounter = document.getElementById('imageCounter');
+        const loader = document.getElementById('loader');
+        const currentYear = document.getElementById('currentYear');
+        const statusMessage = document.getElementById('statusMessage');
         
-        // 初始化页面
-        document.addEventListener('DOMContentLoaded', function() {
-            renderCards(travelData);
-            setupFilterButtons();
-            setupModal();
-        });
+        // 配置输入
+        const usernameInput = document.getElementById('username');
+        const repoInput = document.getElementById('repo');
+        const pathInput = document.getElementById('path');
         
-        // 渲染卡片
-        function renderCards(data) {
-            const container = document.getElementById('cardsContainer');
-            container.innerHTML = '';
+        // 按钮
+        const loadImagesBtn = document.getElementById('loadImages');
+        const clearGalleryBtn = document.getElementById('clearGallery');
+        const refreshImagesBtn = document.getElementById('refreshImages');
+        const loadSampleBtn = document.getElementById('loadSample');
+        
+        // 图片数据
+        let imageData = [];
+        let currentImageIndex = 0;
+        
+        // 支持的图片格式
+        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg', '.tiff', '.tif'];
+        
+        // 初始化
+        function init() {
+            // 设置当前年份
+            currentYear.textContent = new Date().getFullYear();
             
-            data.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.dataset.category = item.category;
+            // 默认加载用户提供的示例仓库
+            loadImagesFromGitHub();
+            
+            // 事件监听
+            loadImagesBtn.addEventListener('click', loadImagesFromGitHub);
+            clearGalleryBtn.addEventListener('click', clearGallery);
+            refreshImagesBtn.addEventListener('click', loadImagesFromGitHub);
+            loadSampleBtn.addEventListener('click', loadSampleImages);
+            
+            modalClose.addEventListener('click', closeModal);
+            modalPrev.addEventListener('click', showPrevImage);
+            modalNext.addEventListener('click', showNextImage);
+            
+            // 点击模态框背景关闭
+            imageModal.addEventListener('click', (e) => {
+                if (e.target === imageModal) {
+                    closeModal();
+                }
+            });
+            
+            // 键盘事件监听
+            document.addEventListener('keydown', handleKeyDown);
+        }
+        
+        // 从GitHub加载图片
+        async function loadImagesFromGitHub() {
+            const username = usernameInput.value.trim();
+            const repo = repoInput.value.trim();
+            const path = pathInput.value.trim();
+            
+            if (!username || !repo) {
+                showStatus("请输入GitHub用户名和仓库名称", "error");
+                return;
+            }
+            
+            // 显示加载指示器
+            loader.classList.add('active');
+            galleryContainer.innerHTML = '';
+            showStatus("正在从GitHub加载图片...", "info");
+            
+            try {
+                // 构建GitHub API URL
+                const apiUrl = `https://api.github.com/repos/${username}/${repo}/contents/${path}`;
                 
-                card.innerHTML = `
-                    <img src="${item.image}" alt="${item.title}" class="card-image">
-                    <button class="favorite-btn">♥</button>
-                    <div class="card-content">
-                        <span class="card-category">${getCategoryName(item.category)}</span>
-                        <h3 class="card-title">${item.title}</h3>
-                        <p class="card-description">${item.description}</p>
-                        <div class="card-footer">
-                            <span class="card-price">${item.price}</span>
-                            <button class="card-btn view-detail" data-id="${item.id}">查看详情</button>
-                        </div>
+                // 获取仓库文件列表
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`GitHub API错误: ${response.status}`);
+                }
+                
+                const files = await response.json();
+                
+                // 清空之前的图片数据
+                imageData = [];
+                
+                // 过滤出图片文件
+                for (const file of files) {
+                    if (file.type === 'file') {
+                        const fileName = file.name.toLowerCase();
+                        const isImage = imageExtensions.some(ext => fileName.endsWith(ext));
+                        
+                        if (isImage) {
+                            // 使用原始图片URL (raw.githubusercontent.com)
+                            const rawImageUrl = file.download_url || 
+                                               `https://raw.githubusercontent.com/${username}/${repo}/${path}/${file.name}`;
+                            
+                            imageData.push({
+                                src: rawImageUrl,
+                                name: file.name,
+                                size: formatFileSize(file.size),
+                                path: file.path
+                            });
+                        }
+                    }
+                }
+                
+                // 更新状态
+                if (imageData.length === 0) {
+                    showStatus("未找到图片文件。请确保仓库中存在支持的图片格式（jpg, png, gif等）。", "error");
+                } else {
+                    showStatus(`成功加载 ${imageData.length} 张图片`, "success");
+                    renderGallery();
+                }
+                
+            } catch (error) {
+                console.error("加载图片失败:", error);
+                showStatus(`加载失败: ${error.message}`, "error");
+                
+                // 如果GitHub API失败，尝试使用示例图片
+                if (imageData.length === 0) {
+                    loadSampleImages();
+                }
+            } finally {
+                loader.classList.remove('active');
+            }
+        }
+        
+        // 加载示例图片
+        function loadSampleImages() {
+            showStatus("加载示例图片...", "info");
+            loader.classList.add('active');
+            
+            // 示例图片数据
+            imageData = [
+                {
+                    src: "https://raw.githubusercontent.com/guoshao2024/game/main/a_%20(1).jpg",
+                    name: "a_ (1).jpg",
+                    size: "示例图片",
+                    path: "a_ (1).jpg"
+                },
+                {
+                    src: "https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                    name: "自然风光.jpg",
+                    size: "示例图片",
+                    path: "自然风光.jpg"
+                },
+                {
+                    src: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                    name: "山脉日出.jpg",
+                    size: "示例图片",
+                    path: "山脉日出.jpg"
+                },
+                {
+                    src: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                    name: "森林小径.jpg",
+                    size: "示例图片",
+                    path: "森林小径.jpg"
+                },
+                {
+                    src: "https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                    name: "海边日落.jpg",
+                    size: "示例图片",
+                    path: "海边日落.jpg"
+                },
+                {
+                    src: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                    name: "秋季森林.jpg",
+                    size: "示例图片",
+                    path: "秋季森林.jpg"
+                }
+            ];
+            
+            // 延迟渲染，以便看到加载状态
+            setTimeout(() => {
+                showStatus(`加载了 ${imageData.length} 张示例图片`, "success");
+                renderGallery();
+                loader.classList.remove('active');
+            }, 800);
+        }
+        
+        // 渲染画廊
+        function renderGallery() {
+            galleryContainer.innerHTML = '';
+            
+            if (imageData.length === 0) {
+                galleryContainer.innerHTML = '<div class="status-message status-info">没有找到图片</div>';
+                return;
+            }
+            
+            // 遍历图片数据并创建缩略图
+            imageData.forEach((image, index) => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                galleryItem.setAttribute('data-index', index);
+                
+                galleryItem.innerHTML = `
+                    <img class="thumbnail" src="${image.src}" alt="${image.name}" loading="lazy" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"300\" height=\"200\" viewBox=\"0 0 300 200\"><rect width=\"300\" height=\"200\" fill=\"%23f0f0f0\"/><text x=\"150\" y=\"100\" font-family=\"Arial\" font-size=\"16\" text-anchor=\"middle\" fill=\"%23999\">图片加载失败</text></svg>';">
+                    <div class="image-info">
+                        <div class="image-name">${image.name}</div>
+                        <div class="image-size">${image.size}</div>
                     </div>
                 `;
                 
-                container.appendChild(card);
-            });
-            
-            // 添加收藏按钮事件
-            document.querySelectorAll('.favorite-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    this.classList.toggle('active');
-                });
-            });
-            
-            // 添加查看详情事件
-            document.querySelectorAll('.view-detail').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const id = parseInt(this.dataset.id);
-                    showDetailModal(id);
-                });
+                // 添加点击事件
+                galleryItem.addEventListener('click', () => openModal(index));
+                
+                galleryContainer.appendChild(galleryItem);
             });
         }
         
-        // 设置筛选按钮
-        function setupFilterButtons() {
-            const filterBtns = document.querySelectorAll('.filter-btn');
-            
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // 更新活动按钮样式
-                    filterBtns.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // 筛选卡片
-                    const category = this.dataset.category;
-                    filterCards(category);
-                });
-            });
+        // 清空画廊
+        function clearGallery() {
+            imageData = [];
+            galleryContainer.innerHTML = '';
+            showStatus("相册已清空", "info");
         }
         
-        // 筛选卡片
-        function filterCards(category) {
-            const cards = document.querySelectorAll('.card');
-            
-            cards.forEach(card => {
-                if (category === 'all' || card.dataset.category === category) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+        // 打开模态框
+        function openModal(index) {
+            currentImageIndex = index;
+            updateModalContent();
+            imageModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
         
-        // 设置模态框
-        function setupModal() {
-            const modal = document.getElementById('detailModal');
-            const closeBtn = document.getElementById('closeModal');
-            
-            closeBtn.addEventListener('click', function() {
-                modal.style.display = 'none';
-            });
-            
-            window.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
+        // 关闭模态框
+        function closeModal() {
+            imageModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
         }
         
-        // 显示详情模态框
-        function showDetailModal(id) {
-            const item = travelData.find(item => item.id === id);
-            if (!item) return;
+        // 更新模态框内容
+        function updateModalContent() {
+            if (imageData.length === 0) return;
             
-            const modal = document.getElementById('detailModal');
-            document.getElementById('modalTitle').textContent = item.title;
-            document.getElementById('modalImage').src = item.image;
-            document.getElementById('modalImage').alt = item.title;
-            document.getElementById('modalCategory').textContent = getCategoryName(item.category);
-            document.getElementById('modalPrice').textContent = item.price;
-            document.getElementById('modalDescription').textContent = item.description;
-            
-            const highlightsList = document.getElementById('modalHighlights');
-            highlightsList.innerHTML = '';
-            item.highlights.forEach(highlight => {
-                const li = document.createElement('li');
-                li.textContent = highlight;
-                highlightsList.appendChild(li);
-            });
-            
-            modal.style.display = 'flex';
+            const image = imageData[currentImageIndex];
+            modalImage.src = image.src;
+            modalImage.alt = image.name;
+            imageDescription.textContent = `${image.name} (${image.size})`;
+            imageCounter.textContent = `${currentImageIndex + 1} / ${imageData.length}`;
         }
         
-        // 获取分类名称
-        function getCategoryName(category) {
-            const names = {
-                'domestic': '国内游',
-                'international': '国际游',
-                'adventure': '探险游',
-                'relax': '休闲游'
-            };
-            return names[category] || category;
+        // 显示上一张图片
+        function showPrevImage() {
+            if (imageData.length === 0) return;
+            currentImageIndex = (currentImageIndex - 1 + imageData.length) % imageData.length;
+            updateModalContent();
         }
+        
+        // 显示下一张图片
+        function showNextImage() {
+            if (imageData.length === 0) return;
+            currentImageIndex = (currentImageIndex + 1) % imageData.length;
+            updateModalContent();
+        }
+        
+        // 键盘导航
+        function handleKeyDown(e) {
+            if (!imageModal.classList.contains('active')) return;
+            
+            switch(e.key) {
+                case 'Escape':
+                    closeModal();
+                    break;
+                case 'ArrowLeft':
+                    showPrevImage();
+                    break;
+                case 'ArrowRight':
+                    showNextImage();
+                    break;
+            }
+        }
+        
+        // 显示状态消息
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message status-${type}`;
+            statusMessage.style.display = 'block';
+        }
+        
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (!bytes || bytes === 0) return '未知大小';
+            
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+        
+        // 页面加载完成后初始化
+        window.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
